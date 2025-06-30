@@ -1,14 +1,16 @@
+version: '3.9'
+
 services:
   mysql:
     image: mysql:8.0
     container_name: mysql
+    ports:
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: sgse_db
       MYSQL_USER: dev
       MYSQL_PASSWORD: dev
-    ports:
-      - "3308:3306"
     command: --default-authentication-plugin=mysql_native_password
     networks:
       - sgse-network
@@ -19,22 +21,16 @@ services:
       retries: 3
 
   eureka-server:
-    build:
-      context: ./eureka-server/
-      dockerfile: Dockerfile
+    image: leweeskys/eureka-server:latest
     container_name: eureka-server
-    image: sbore669/eureka-server
     ports:
       - "8762:8762"
     networks:
       - sgse-network
 
   api-gateway:
-    build:
-      context: ./gateway/
-      dockerfile: Dockerfile
+    image: leweeskys/api-gateway:latest
     container_name: api-gateway
-    image: sbore669/api-gateway
     ports:
       - "9090:9090"
     depends_on:
@@ -45,11 +41,8 @@ services:
       - sgse-network
 
   encadreur-service:
-    build:
-      context: ./encadreur-service/
-      dockerfile: Dockerfile
+    image: leweeskys/encadreur-service:latest
     container_name: encadreur-service
-    image: sbore669/encadreur-service
     ports:
       - "9092:9092"
     depends_on:
@@ -65,11 +58,8 @@ services:
       - sgse-network
 
   stagiaire-service:
-    build:
-      context: ./stagiaire-service/
-      dockerfile: Dockerfile
+    image: leweeskys/stagiaire-service:latest
     container_name: stagiaire-service
-    image: sbore669/stagiaire-service
     ports:
       - "9091:9091"
     depends_on:
